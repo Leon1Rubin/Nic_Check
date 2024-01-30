@@ -1,5 +1,7 @@
 import paramiko # Import the paramiko module
 import time  # Import the time module
+import sys  # Import sys for command-line arguments
+
 
 # Function to check if the server is online
 def check_ssh_connection(hostname, username, password):
@@ -101,14 +103,9 @@ def what_server(hostname, username, password):
     finally:
         ssh.close()
 
-def main():
-    rack_cell_input = input("Enter rack-cell number (e.g.,8-1): ")
-
+def main(rack_cell_input, username, password):
     # Split the input into rack and cell
     rack, cell = map(int, rack_cell_input.split('-'))
-
-    username = "vastdata"
-    password = "vastdata"
 
     nodes = {
         "node 1": 1,
@@ -155,4 +152,8 @@ def main():
     print("Successfully finished with the checking on NIC stats ✅")    
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) != 4:
+        print("Usage: script.py <rack-cell> <user> <password>")
+        sys.exit(1)
+
+    main(sys.argv[1], sys.argv[2], sys.argv[3])
